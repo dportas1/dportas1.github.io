@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, td {
+  border: 1px solid #444; border-collapse: collapse;
+  font-family: Arial, Helvetica, sans-serif;
+}
+table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+body {
+  font-family: sans-serif;
+}
+label {
+    color: red;
+}
+
+</style>
+</head>
+<body>
+
+<h3>Keys and Referential Integrity</h3>
+
+Products
+
+<table id="productTable">
+<tbody>
+    <tr>
+        <td>Mango</td>
+        <td>very nice</td>
+      </tr>
+      <tr>
+        <td>Papaya</td>
+        <td>fresh today</td>
+      </tr>
+      <tr>
+        <td>Rambutan</td>
+        <td>tastes good</td>
+      </tr>
+    </tbody>
+    </table>
+
+    <p>Insert or delete a product:</p>
+    <input type="text" id="productName" value="">
+    <button onclick="insertNewProduct()">Insert</button>
+    <button onclick="deleteProduct()">Delete</button>
+    <br>
+    <label id="productMsg"></label>
+
+    <hr>
+Shopping Cart
+
+<table id="cartTable">
+    <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+    </table>
+        
+    <p>Add a product to the shopping cart:</p>
+    <input type="text" id="purchaseName" value="">
+    <button onclick="insertNewPurchase()">Insert</button>
+    <button onclick="deletePurchase()">Delete</button>
+    <br>
+    <label id="cartMsg"></label>    
+
+    <label id="status"></label>
+
+<script>
+
+var cartrow = 0
+
+function insertNewProduct() {
+    var p = document.getElementById("productName").value;
+    var x = document.getElementById("productTable");
+    var rowCount = x.rows.length;
+
+    if (p == null || p == "") {
+        document.getElementById("productMsg").innerHTML = "ERROR: Cannot insert a NULL value into the PRIMARY KEY column";
+        document.getElementById("cartMsg").innerHTML = "";
+        return;
+    }
+
+    if (SearchTable("productTable","productName",0)== -1) {
+
+        var row = x.insertRow(rowCount);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        cell1.innerHTML = p;
+        cell2.innerHTML = "New product";
+        document.getElementById("productMsg").innerHTML = "";
+        document.getElementById("cartMsg").innerHTML = "";
+    } else {
+        document.getElementById("productMsg").innerHTML = "ERROR: Violation of the PRIMARY KEY constraint";
+        document.getElementById("cartMsg").innerHTML = "";
+    }
+
+}
+
+function deleteProduct() {
+    var x = document.getElementById("productTable");
+
+    dr = SearchTable("productTable","productName",0)
+
+    if (dr != -1) {
+
+        if (SearchTable("cartTable","productName",1)== -1) {
+
+            x.deleteRow(dr);
+            document.getElementById("productMsg").innerHTML = "";
+            document.getElementById("cartMsg").innerHTML = "";
+
+        } else {
+            document.getElementById("productMsg").innerHTML = "ERROR: The DELETE conflicts with the FOREIGN KEY constraint on the Shopping Cart table";
+            document.getElementById("cartMsg").innerHTML = "";
+        }
+
+    } else {
+        document.getElementById("productMsg").innerHTML = "";
+        document.getElementById("cartMsg").innerHTML = "";
+    }
+
+}
+
+function insertNewPurchase() {
+
+    var p = document.getElementById("purchaseName").value;
+    var x = document.getElementById("cartTable");
+    var rowCount = x.rows.length;
+
+    if (SearchTable("productTable","purchaseName",0)!= -1) {
+
+        var row = x.insertRow(rowCount);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        cartrow = cartrow + 1;
+        cell1.innerHTML = cartrow;
+        cell2.innerHTML = p;
+
+        document.getElementById("productMsg").innerHTML = "";
+        document.getElementById("cartMsg").innerHTML = "";
+    } else
+    {
+        document.getElementById("productMsg").innerHTML = "";
+        document.getElementById("cartMsg").innerHTML = "ERROR: The INSERT conflicts with the FOREIGN KEY constraint";
+    }
+
+}
+
+function deletePurchase() {
+    var x = document.getElementById("cartTable");
+    var dr = SearchTable("cartTable","purchaseName",1)
+
+    if (dr != -1) {
+
+        x.deleteRow(dr);
+        document.getElementById("productMsg").innerHTML = "";
+        document.getElementById("cartMsg").innerHTML = "";
+
+    }
+}
+
+function SearchTable( tableId, queryId, idx) {
+    var q = document.getElementById(queryId);
+    var v = q.value.toLowerCase();
+    var t = document.getElementById(tableId);
+    var rows = t.getElementsByTagName("tr");
+    for ( var i = 0; i < rows.length; i++ ) {
+        var f = rows[i].getElementsByTagName("td");
+        var f = f[idx].innerHTML.toLowerCase();
+
+        if ( f == v ) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+</script>
+  
+</body>
+</html>
