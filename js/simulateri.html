@@ -156,12 +156,10 @@ function deletePurchase() {
     var dr = SearchTable("cartTable","purchaseName",1)
 
     if (dr != -1) {
-
         x.deleteRow(dr);
-        document.getElementById("productMsg").innerHTML = "";
-        document.getElementById("cartMsg").innerHTML = "";
-
     }
+    document.getElementById("productMsg").innerHTML = "";
+    document.getElementById("cartMsg").innerHTML = "";
 }
 
 function SearchTable( tableId, queryId, idx) {
