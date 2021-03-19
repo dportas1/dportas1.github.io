@@ -4,11 +4,12 @@
 <style>
 table, td {
   border: 1px solid #444; border-collapse: collapse;
+  padding: 4px;
   font-family: Arial, Helvetica, sans-serif;
 }
 table th {
-  border: 1px solid #ddd;
-  padding: 8px;
+  border: 1px solid #444; border-collapse: collapse;
+  padding: 4px;
 }
 body {
   font-family: sans-serif;
@@ -16,13 +17,28 @@ body {
 label {
     color: red;
 }
+img {
+  padding: 50px;
+}
+.column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 
 </style>
 </head>
 <body>
 
 <h3>Keys and Referential Integrity</h3>
-
+<div class="row">
+    <div class="column">
 Products
 
 <table id="productTable">
@@ -48,8 +64,8 @@ Products
     <button onclick="deleteProduct()">Delete</button>
     <br>
     <label id="productMsg"></label>
-
-    <hr>
+    <br>
+    <br>
 Shopping Cart
 
 <table id="cartTable">
@@ -69,6 +85,11 @@ Shopping Cart
     <label id="cartMsg"></label>    
 
     <label id="status"></label>
+</div>
+    <div class="column">
+        <img src="ershoppingcart.jpg" />
+    </div>
+</div>
 
 <script>
 
@@ -91,7 +112,7 @@ function insertNewProduct() {
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
         cell1.innerHTML = p;
-        cell2.innerHTML = "New product";
+        cell2.innerHTML = "new product";
         document.getElementById("productMsg").innerHTML = "";
         document.getElementById("cartMsg").innerHTML = "";
     } else {
